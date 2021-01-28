@@ -129,6 +129,7 @@ void setup() {
 void loop() {
   //read all the pixels
   amg.readPixels(pixels);
+  
   // now that we have an 8 x 8 sensor array
   // interpolate to get a bigger screen
   // interpolate the 8 rows (interpolate the 70 column points between the 8 sensor pixels first)
@@ -175,18 +176,26 @@ void loop() {
     }
   }
 
+  /*for(int i=0;i<70;i++){
+    for(int k=0;k<70;k++){
+      Serial.print(HDTemp[i][k]);
+    }
+    Serial.println("");
+  }
+  */
+ 
   if (ESP_BT.available()) {
     incoming = ESP_BT.read(); 
     if(incoming==49){
       if((millis()-lastSave)>=saveDelay){
         root = SD.open("test.txt", FILE_WRITE);
         if(root){
-          for(int j=1; j<=AMG88xx_PIXEL_ARRAY_SIZE; j++){
-            root.print(String(pixels[j-1]));
-            root.print(",");
-            if(j % 8 == 0){
-              root.println("");
+          for(int i=0;i<70;i++){
+            for(int k=0;k<70;k++){
+              root.print(String(HDTemp[i][k]));
+              root.print(",");
             }
+            root.println("");
           }
           root.println("");
           root.close();
